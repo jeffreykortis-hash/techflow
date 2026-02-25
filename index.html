@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TechFlow Solutions · Sigma</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f5f6fa;
+    --surface: #ffffff;
+    --surface2: #f0f2f8;
+    --border: #e2e6f0;
+    --border2: #cdd4e8;
+    --accent: #3a7ef4;
+    --accent2: #00b896;
+    --accent3: #e8a800;
+    --accent4: #e84f35;
+    --text: #0f1629;
+    --text2: #4a5578;
+    --text3: #9aa3bf;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'IBM Plex Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  .topbar {
+    height: 48px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    padding: 0 28px;
+    gap: 14px;
+    background: var(--surface);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .sigma-logo { display: flex; align-items: center; }
+  .topbar-divider { width: 1px; height: 18px; background: var(--border2); }
+
+  .breadcrumb {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 13px; color: var(--text2);
+  }
+  .breadcrumb span:last-child { color: var(--text); font-weight: 500; }
+  .breadcrumb .sep { opacity: 0.3; }
+
+  .topbar-right { margin-left: auto; display: flex; align-items: center; gap: 12px; }
+
+  .live-badge {
+    display: flex; align-items: center; gap: 5px;
+    font-size: 11px; color: var(--accent2);
+    padding: 3px 9px;
+    background: rgba(0,212,168,0.08);
+    border: 1px solid rgba(0,212,168,0.2);
+    border-radius: 20px;
+    font-family: 'IBM Plex Mono', monospace;
+  }
+  .live-dot { width: 5px; height: 5px; background: var(--accent2); border-radius: 50%; animation: blink 2s infinite; }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+  .page {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-height: calc(100vh - 48px);
+  }
+
+  .left-panel {
+    padding: 56px 60px 48px 60px;
+    display: flex;
+    flex-direction: column;
+    gap: 44px;
+    border-right: 1px solid var(--border);
+    background: var(--surface);
+  }
+
+
+  .brand-sub {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 14px;
+    font-family: 'IBM Plex Mono', monospace;
+  }
+  .brand-name {
+    font-size: 48px;
+    font-weight: 300;
+    line-height: 1.05;
+    letter-spacing: -1.5px;
+    color: var(--text);
+  }
+  .brand-name strong { font-weight: 600; color: var(--text); }
+  .brand-name .accent-word { color: var(--accent); font-weight: 600; }
+
+  .about-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text3);
+    margin-bottom: 12px;
+    font-family: 'IBM Plex Mono', monospace;
+  }
+  .about-text {
+    font-size: 13.5px;
+    line-height: 1.75;
+    color: var(--text2);
+    max-width: 440px;
+    font-weight: 300;
+  }
+
+  .app-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .app-card {
+    border-radius: 8px;
+    padding: 20px 20px 24px;
+    cursor: pointer;
+    transition: transform 0.18s, box-shadow 0.18s;
+    position: relative;
+    overflow: hidden;
+  }
+  .app-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; height: 1px;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  .app-card:hover { transform: translateY(-3px); }
+  .app-card:hover::before { opacity: 1; }
+
+  .app-card.sales { background: rgba(58,126,244,0.05); border: 1px solid rgba(58,126,244,0.18); }
+  .app-card.sales::before { background: linear-gradient(90deg,transparent,#3a7ef4,transparent); }
+  .app-card.sales:hover { box-shadow: 0 8px 30px rgba(58,126,244,0.12); }
+
+  .app-card.finance { background: rgba(0,184,150,0.05); border: 1px solid rgba(0,184,150,0.18); }
+  .app-card.finance::before { background: linear-gradient(90deg,transparent,#00b896,transparent); }
+  .app-card.finance:hover { box-shadow: 0 8px 30px rgba(0,184,150,0.10); }
+
+  .app-card.rd { background: rgba(139,92,246,0.05); border: 1px solid rgba(139,92,246,0.18); }
+  .app-card.rd::before { background: linear-gradient(90deg,transparent,#8b5cf6,transparent); }
+  .app-card.rd:hover { box-shadow: 0 8px 30px rgba(139,92,246,0.10); }
+
+  .app-card.forecast { background: rgba(232,168,0,0.05); border: 1px solid rgba(232,168,0,0.18); }
+  .app-card.forecast::before { background: linear-gradient(90deg,transparent,#e8a800,transparent); }
+  .app-card.forecast:hover { box-shadow: 0 8px 30px rgba(232,168,0,0.10); }
+
+  .app-card-header {
+    display: flex; align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+
+  .app-name {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: var(--text);
+    font-family: 'IBM Plex Mono', monospace;
+  }
+
+  .go-btn {
+    width: 26px; height: 26px;
+    border: none;
+    border-radius: 5px;
+    font-size: 10px;
+    font-weight: 700;
+    font-family: 'IBM Plex Mono', monospace;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    letter-spacing: 0.5px;
+    flex-shrink: 0;
+    transition: all 0.15s;
+  }
+  .sales .go-btn { background: rgba(58,126,244,0.1); color: #3a7ef4; border: 1px solid rgba(58,126,244,0.3); }
+  .sales .go-btn:hover { background: #3a7ef4; color: #fff; }
+  .finance .go-btn { background: rgba(0,184,150,0.1); color: #00b896; border: 1px solid rgba(0,184,150,0.3); }
+  .finance .go-btn:hover { background: #00b896; color: #fff; }
+  .rd .go-btn { background: rgba(139,92,246,0.1); color: #8b5cf6; border: 1px solid rgba(139,92,246,0.3); }
+  .rd .go-btn:hover { background: #8b5cf6; color: #fff; }
+  .forecast .go-btn { background: rgba(232,168,0,0.1); color: #c49000; border: 1px solid rgba(232,168,0,0.3); }
+  .forecast .go-btn:hover { background: #e8a800; color: #fff; }
+
+  .app-desc {
+    font-size: 12px;
+    line-height: 1.65;
+    color: var(--text2);
+    font-weight: 300;
+  }
+
+  /* RIGHT PANEL */
+  .right-panel {
+    position: relative;
+    overflow: hidden;
+    background: var(--bg);
+  }
+
+  .hero-bg {
+    width: 100%;
+    height: 100%;
+    min-height: calc(100vh - 48px);
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .grid-svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.07;
+  }
+
+  .orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    pointer-events: none;
+  }
+  .orb1 { width: 340px; height: 340px; background: rgba(58,126,244,0.18); top: -80px; right: -60px; }
+  .orb2 { width: 260px; height: 260px; background: rgba(0,184,150,0.14); bottom: 60px; right: 40px; }
+  .orb3 { width: 200px; height: 200px; background: rgba(139,92,246,0.14); top: 50%; right: 160px; transform: translateY(-50%); }
+
+  .hero-spark {
+    position: absolute;
+    top: 36px;
+    left: 36px;
+    right: 36px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 20px 20px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  }
+  .spark-header {
+    font-size: 10px; color: var(--text3);
+    font-family: 'IBM Plex Mono', monospace;
+    letter-spacing: 1px; text-transform: uppercase; margin-bottom: 10px;
+  }
+
+  .hero-preview {
+    position: absolute;
+    bottom: 36px;
+    left: 36px;
+    right: 36px;
+    background: var(--surface);
+    border-radius: 10px;
+    padding: 20px 22px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    border: 1px solid var(--border);
+  }
+  .hero-preview::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg,transparent,rgba(58,126,244,0.5),transparent);
+    border-radius: 10px 10px 0 0;
+  }
+
+  .preview-label {
+    font-size: 10px; font-weight: 500;
+    letter-spacing: 1.5px; text-transform: uppercase;
+    color: var(--text3); margin-bottom: 14px;
+    font-family: 'IBM Plex Mono', monospace;
+  }
+
+  .preview-kpis {
+    display: grid; grid-template-columns: repeat(4,1fr);
+    gap: 12px; margin-bottom: 16px; padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .pk-label { font-size: 10px; color: var(--text3); margin-bottom: 3px; font-family: 'IBM Plex Mono', monospace; }
+  .pk-value { font-size: 20px; font-weight: 600; letter-spacing: -0.5px; color: var(--text); }
+  .pk-change { font-size: 10px; margin-top: 2px; }
+  .up { color: var(--accent2); }
+  .down { color: var(--accent4); }
+  .flat { color: var(--text3); }
+
+  .preview-bars { display: flex; flex-direction: column; gap: 8px; }
+  .preview-bar-row { display: flex; align-items: center; gap: 10px; }
+  .preview-bar-label { font-size: 11px; color: var(--text2); white-space: nowrap; min-width: 90px; }
+  .preview-bar { flex: 1; height: 5px; background: var(--border); border-radius: 4px; overflow: hidden; }
+  .preview-bar-fill { height: 100%; border-radius: 4px; }
+
+  .preview-footer {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-top: 16px; padding-top: 14px;
+    border-top: 1px solid var(--border);
+    font-size: 11px; color: var(--text3);
+    font-family: 'IBM Plex Mono', monospace;
+  }
+
+  .open-btn {
+    padding: 6px 14px;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    font-size: 11px;
+    font-weight: 600;
+    font-family: 'IBM Plex Mono', monospace;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: flex; align-items: center; gap: 5px;
+  }
+  .open-btn:hover { background: #2a6ee0; box-shadow: 0 0 16px rgba(58,126,244,0.3); }
+
+  .footer {
+    padding: 14px 60px;
+    border-top: 1px solid var(--border);
+    display: flex; align-items: center; gap: 10px;
+    font-size: 11px; color: var(--text3);
+    background: var(--surface);
+    font-family: 'IBM Plex Mono', monospace;
+    letter-spacing: 0.3px;
+  }
+</style>
+</head>
+<body>
+
+<!-- TOP NAV -->
+<div class="topbar">
+  <div class="sigma-logo">
+    <svg width="82" height="22" viewBox="0 0 200 62" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="0,10 38,31 0,31" fill="#0f1629"/>
+      <polygon points="0,31 38,31 0,52" fill="#0f1629" opacity="0.45"/>
+      <polygon points="0,10 18,10 0,22" fill="#ffffff"/>
+      <polygon points="4,54 22,54 4,62" fill="#0f1629"/>
+      <text x="50" y="44" font-family="'IBM Plex Sans', sans-serif" font-size="32" font-weight="400" fill="#0f1629" letter-spacing="-0.5">sigma</text>
+    </svg>
+  </div>
+  <div class="topbar-divider"></div>
+  <div class="breadcrumb">
+    <span>TechFlow Solutions</span>
+    <span class="sep">/</span>
+    <span>Home</span>
+  </div>
+  <div class="topbar-right">
+    <div class="live-badge">
+      <div class="live-dot"></div>
+      Live · Feb 25, 11:59 PM
+    </div>
+  </div>
+</div>
+
+<!-- PAGE -->
+<div class="page">
+
+  <!-- LEFT -->
+  <div class="left-panel">
+
+    <div class="brand-mark">
+      <div class="brand-sub">TechFlow Solutions</div>
+      <div class="brand-name">
+        <strong>Sales</strong> &amp;<br>
+        <span class="accent-word">Analytics</span><br>
+        <span style="font-weight:300;font-size:38px;letter-spacing:-1px;color:var(--text2);">Workspace</span>
+      </div>
+    </div>
+
+    <div>
+      <div class="about-label">// About</div>
+      <div class="about-text">
+        TechFlow Solutions operates a 120-person sales org across West, East, and Central regions — serving Enterprise, Mid-Market, and SMB accounts. This workspace brings together live pipeline data, rep performance, forecasting, and AI-powered insights so every manager and exec has the full picture, always.
+      </div>
+    </div>
+
+    <div class="app-grid">
+
+      <div class="app-card sales" onclick="window.open('sigma-dashboard.html','_blank')">
+        <div class="app-card-header">
+          <div class="app-name">Sales Performance</div>
+          <button class="go-btn">GO</button>
+        </div>
+        <div class="app-desc">Live Q1 pipeline, rep leaderboard, win/loss by region, AI summary, and deal note workflows. The full sales picture in one view.</div>
+      </div>
+
+      <div class="app-card finance">
+        <div class="app-card-header">
+          <div class="app-name">Finance</div>
+          <button class="go-btn">GO</button>
+        </div>
+        <div class="app-desc">Aggregates structured and unstructured data across all sources. Sigma AI parses purchase orders and builds a single unified forecast.</div>
+      </div>
+
+      <div class="app-card rd">
+        <div class="app-card-header">
+          <div class="app-name">R&amp;D</div>
+          <button class="go-btn">GO</button>
+        </div>
+        <div class="app-desc">Combines historical sales data with Sigma's native Python to surface hidden customer patterns and propose new products likely to succeed.</div>
+      </div>
+
+      <div class="app-card forecast">
+        <div class="app-card-header">
+          <div class="app-name">Forecasting</div>
+          <button class="go-btn">GO</button>
+        </div>
+        <div class="app-desc">AI-driven quarterly projections built on pipeline velocity, historical close rates, and real-time deal signals. Refreshed daily.</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- RIGHT -->
+  <div class="right-panel">
+    <div class="hero-bg">
+      <div class="orb orb1"></div>
+      <div class="orb orb2"></div>
+      <div class="orb orb3"></div>
+
+      <svg class="grid-svg" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+            <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#3a7ef4" stroke-width="0.5"/>
+          </pattern>
+        </defs>
+        <rect width="100%" height="100%" fill="url(#grid)"/>
+      </svg>
+
+      <!-- Pipeline trend strip -->
+      <div class="hero-spark">
+        <div class="spark-header">// Pipeline Trend · Last 6 Months</div>
+        <svg width="100%" height="52" viewBox="0 0 480 52" preserveAspectRatio="none">
+          <defs>
+            <linearGradient id="linegrad" x1="0" x2="0" y1="0" y2="1">
+              <stop offset="0%" stop-color="#4f8ef7" stop-opacity="0.3"/>
+              <stop offset="100%" stop-color="#4f8ef7" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+          <path d="M0,42 L80,38 L160,30 L240,26 L320,20 L400,14 L480,8 L480,52 L0,52 Z" fill="url(#linegrad)"/>
+          <polyline points="0,42 80,38 160,30 240,26 320,20 400,14 480,8" fill="none" stroke="#4f8ef7" stroke-width="2" stroke-linejoin="round"/>
+          <circle cx="0" cy="42" r="3" fill="#4f8ef7"/>
+          <circle cx="80" cy="38" r="3" fill="#4f8ef7"/>
+          <circle cx="160" cy="30" r="3" fill="#4f8ef7"/>
+          <circle cx="240" cy="26" r="3" fill="#4f8ef7"/>
+          <circle cx="320" cy="20" r="3" fill="#4f8ef7"/>
+          <circle cx="400" cy="14" r="3" fill="#4f8ef7"/>
+          <circle cx="480" cy="8" r="4" fill="#4f8ef7" stroke="#6ba3ff" stroke-width="2"/>
+          <text x="0" y="52" fill="#9aa3bf" font-size="9" font-family="IBM Plex Mono">Sep</text>
+          <text x="75" y="52" fill="#9aa3bf" font-size="9" font-family="IBM Plex Mono">Oct</text>
+          <text x="155" y="52" fill="#9aa3bf" font-size="9" font-family="IBM Plex Mono">Nov</text>
+          <text x="234" y="52" fill="#9aa3bf" font-size="9" font-family="IBM Plex Mono">Dec</text>
+          <text x="314" y="52" fill="#9aa3bf" font-size="9" font-family="IBM Plex Mono">Jan</text>
+          <text x="394" y="52" fill="#9aa3bf" font-size="9" font-family="IBM Plex Mono">Feb</text>
+        </svg>
+      </div>
+
+      <!-- Preview card -->
+      <div class="hero-preview">
+        <div class="preview-label">// Sales Performance · Q1 2026 Preview</div>
+        <div class="preview-kpis">
+          <div>
+            <div class="pk-label">Pipeline</div>
+            <div class="pk-value">$14.2M</div>
+            <div class="pk-change up">▲ 8% vs Q4</div>
+          </div>
+          <div>
+            <div class="pk-label">Closed Won</div>
+            <div class="pk-value">$3.8M</div>
+            <div class="pk-change down">▼ 4% target</div>
+          </div>
+          <div>
+            <div class="pk-label">Win Rate</div>
+            <div class="pk-value">31%</div>
+            <div class="pk-change flat">— flat</div>
+          </div>
+          <div>
+            <div class="pk-label">Avg Deal</div>
+            <div class="pk-value">$48K</div>
+            <div class="pk-change up">▲ 12% YoY</div>
+          </div>
+        </div>
+        <div class="preview-bars">
+          <div class="preview-bar-row">
+            <div class="preview-bar-label">Jamie Ortiz</div>
+            <div class="preview-bar"><div class="preview-bar-fill" style="width:97%;background:#00d4a8;"></div></div>
+            <div style="font-size:11px;font-weight:600;color:#00d4a8;width:32px;text-align:right;font-family:'IBM Plex Mono',monospace;">97%</div>
+          </div>
+          <div class="preview-bar-row">
+            <div class="preview-bar-label">Marcus Webb</div>
+            <div class="preview-bar"><div class="preview-bar-fill" style="width:89%;background:#4f8ef7;"></div></div>
+            <div style="font-size:11px;font-weight:600;color:#4f8ef7;width:32px;text-align:right;font-family:'IBM Plex Mono',monospace;">89%</div>
+          </div>
+          <div class="preview-bar-row">
+            <div class="preview-bar-label">Serena Malik</div>
+            <div class="preview-bar"><div class="preview-bar-fill" style="width:41%;background:#f7634f;"></div></div>
+            <div style="font-size:11px;font-weight:600;color:#f7634f;width:32px;text-align:right;font-family:'IBM Plex Mono',monospace;">41%</div>
+          </div>
+        </div>
+        <div class="preview-footer">
+          <span>data_refresh · 2026-02-25T23:59:00Z</span>
+          <button class="open-btn" onclick="window.open('sigma-dashboard.html','_blank')">
+            Open Dashboard
+            <svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <svg width="66" height="16" viewBox="0 0 200 62" fill="none" xmlns="http://www.w3.org/2000/svg" opacity="0.4">
+    <polygon points="0,10 38,31 0,31" fill="#4a5578"/>
+    <polygon points="0,31 38,31 0,52" fill="#4a5578" opacity="0.5"/>
+    <polygon points="0,10 18,10 0,22" fill="#f5f6fa"/>
+    <polygon points="4,54 22,54 4,62" fill="#4a5578"/>
+    <text x="50" y="44" font-family="'IBM Plex Sans', sans-serif" font-size="32" font-weight="400" fill="#4a5578" letter-spacing="-0.5">sigma</text>
+  </svg>
+  <span>TechFlow Solutions · Internal Use Only · Powered by Sigma Computing</span>
+</div>
+
+</body>
+</html>
