@@ -1,0 +1,1297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TechFlow Sales · Sigma Computing</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f5f6fa;
+    --surface: #ffffff;
+    --surface2: #f0f2f8;
+    --border: #e2e6f0;
+    --border2: #cdd4e8;
+    --accent: #3a7ef4;
+    --accent2: #00b896;
+    --accent3: #e8a800;
+    --accent4: #e84f35;
+    --text: #0f1629;
+    --text2: #4a5578;
+    --text3: #9aa3bf;
+    --sigma: #3a7ef4;
+    --sigma-glow: rgba(58,126,244,0.2);
+    --ai-grad: linear-gradient(135deg, #eef3ff 0%, #e8f0fe 50%, #eef3ff 100%);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* TOP NAV */
+  .topbar {
+    height: 48px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    gap: 16px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .sigma-logo {
+    display: flex;
+    align-items: center;
+  }
+
+  .sigma-logo svg { opacity: 1; }
+
+  .topbar-divider { width: 1px; height: 20px; background: var(--border); }
+
+  .breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: var(--text2);
+  }
+
+  .breadcrumb span:last-child { color: var(--text); font-weight: 500; }
+  .breadcrumb .sep { opacity: 0.4; }
+
+  .topbar-actions {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .btn {
+    display: flex; align-items: center; gap: 6px;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    font-family: inherit;
+    cursor: pointer;
+    border: none;
+    transition: all 0.15s;
+  }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--text2);
+    border: 1px solid var(--border);
+  }
+  .btn-ghost:hover { background: var(--surface2); color: var(--text); border-color: var(--border2); }
+
+  .btn-primary {
+    background: var(--sigma);
+    color: white;
+  }
+  .btn-primary:hover { background: #2a6ee0; }
+
+  .live-badge {
+    display: flex; align-items: center; gap: 5px;
+    font-size: 11px; color: #00966e;
+    padding: 3px 8px;
+    background: rgba(74, 222, 128, 0.1);
+    border: 1px solid rgba(74,222,128,0.25);
+    border-radius: 20px;
+  }
+
+  .live-dot {
+    width: 5px; height: 5px;
+    background: var(--accent2);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%,100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.7); }
+  }
+
+  /* FILTER BAR */
+  .filterbar {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 8px 24px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .filter-label { font-size: 11px; color: var(--text3); font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; }
+
+  .filter-chip {
+    display: flex; align-items: center; gap: 6px;
+    padding: 4px 10px;
+    background: var(--surface2);
+    border: 1px solid var(--border2);
+    border-radius: 6px;
+    font-size: 12px;
+    color: var(--text2);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .filter-chip:hover { border-color: var(--accent); color: var(--text); }
+  .filter-chip.active { background: rgba(58,126,244,0.08); border-color: var(--accent); color: var(--accent); }
+
+  .filter-chip svg { opacity: 0.6; }
+
+  /* MAIN */
+  .main {
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  /* DASHBOARD TITLE */
+  .dash-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+  }
+
+  .dash-title { font-size: 22px; font-weight: 600; letter-spacing: -0.5px; }
+  .dash-sub { font-size: 13px; color: var(--text2); margin-top: 2px; }
+
+  /* AI SUMMARY */
+  .ai-summary {
+    background: var(--ai-grad);
+    border: 1px solid rgba(58,126,244,0.2);
+    border-radius: 12px;
+    padding: 20px 24px;
+    position: relative;
+    overflow: hidden;
+    animation: fadeUp 0.5s ease both;
+  }
+
+  .ai-summary::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, transparent, rgba(58,126,244,0.5), transparent);
+  }
+
+  .ai-summary-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+
+  .ai-icon {
+    width: 28px; height: 28px;
+    background: linear-gradient(135deg, #3a7ef4, #8b5cf6);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+
+  .ai-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px; color: var(--accent); }
+  .ai-timestamp { font-size: 11px; color: var(--text3); margin-left: auto; font-family: 'DM Mono', monospace; }
+
+  .ai-text {
+    font-size: 14px;
+    line-height: 1.75;
+    color: var(--text2);
+    max-width: 900px;
+  }
+
+  .ai-text strong { color: var(--text); }
+  .ai-text .highlight-green { color: #00966e; font-weight: 500; }
+  .ai-text .highlight-red { color: var(--accent4); font-weight: 500; }
+  .ai-text .highlight-yellow { color: #b07d00; font-weight: 500; }
+
+  .ai-pills {
+    display: flex;
+    gap: 8px;
+    margin-top: 14px;
+    flex-wrap: wrap;
+  }
+
+  .ai-pill {
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: opacity 0.15s;
+  }
+  .ai-pill:hover { opacity: 0.8; }
+  .pill-green { background: rgba(0,184,150,0.1); color: #00966e; border: 1px solid rgba(0,184,150,0.25); }
+  .pill-red { background: rgba(232,79,53,0.08); color: var(--accent4); border: 1px solid rgba(232,79,53,0.2); }
+  .pill-yellow { background: rgba(232,168,0,0.1); color: #b07d00; border: 1px solid rgba(232,168,0,0.25); }
+  .pill-blue { background: rgba(58,126,244,0.08); color: var(--accent); border: 1px solid rgba(58,126,244,0.2); }
+
+  /* KPI ROW */
+  .kpi-row {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 14px;
+    animation: fadeUp 0.5s 0.1s ease both;
+  }
+
+  .kpi-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px 20px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .kpi-card:hover { border-color: var(--border2); box-shadow: 0 2px 12px rgba(0,0,0,0.05); }
+
+  .kpi-label { font-size: 11px; color: var(--text3); font-weight: 500; text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 8px; }
+  .kpi-value { font-size: 26px; font-weight: 600; letter-spacing: -1px; line-height: 1; margin-bottom: 6px; color: var(--text); }
+  .kpi-change { font-size: 12px; display: flex; align-items: center; gap: 4px; }
+  .up { color: #00966e; }
+  .down { color: var(--accent4); }
+  .flat { color: var(--text3); }
+
+  .kpi-bar {
+    height: 3px;
+    background: var(--border);
+    border-radius: 2px;
+    margin-top: 12px;
+    overflow: hidden;
+  }
+
+  .kpi-bar-fill {
+    height: 100%;
+    border-radius: 2px;
+    transition: width 1s ease;
+  }
+
+  /* CHARTS ROW */
+  .charts-row {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 16px;
+    animation: fadeUp 0.5s 0.15s ease both;
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .card-header {
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+  }
+
+  .card-title { font-size: 13px; font-weight: 600; letter-spacing: -0.2px; color: var(--text); }
+  .card-sub { font-size: 11px; color: var(--text3); margin-top: 2px; }
+
+  .card-actions { display: flex; gap: 6px; }
+
+  .tab-pills { display: flex; gap: 2px; background: var(--surface2); border-radius: 6px; padding: 2px; }
+  .tab-pill { padding: 3px 10px; border-radius: 4px; font-size: 11px; cursor: pointer; color: var(--text3); transition: all 0.15s; }
+  .tab-pill.active { background: var(--surface); color: var(--text); box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+
+  .card-body { padding: 20px; }
+
+  /* PIPELINE BAR CHART (SVG) */
+  .chart-svg { width: 100%; }
+
+  /* DONUT */
+  .donut-wrap { display: flex; align-items: center; gap: 24px; }
+  .donut-legend { display: flex; flex-direction: column; gap: 10px; flex: 1; }
+  .legend-item { display: flex; align-items: center; gap: 8px; font-size: 12px; }
+  .legend-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .legend-name { color: var(--text2); flex: 1; }
+  .legend-val { font-weight: 600; font-family: 'DM Mono', monospace; font-size: 11px; }
+
+  /* TABLE */
+  .table-wrap {
+    overflow-x: auto;
+    animation: fadeUp 0.5s 0.2s ease both;
+  }
+
+  .data-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .data-table thead tr { border-bottom: 1px solid var(--border); }
+  .data-table th {
+    padding: 10px 14px;
+    text-align: left;
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    color: var(--text3);
+    white-space: nowrap;
+    background: var(--surface2);
+  }
+  .data-table th.sort { cursor: pointer; }
+  .data-table th.sort:hover { color: var(--text2); }
+
+  .data-table td { padding: 11px 14px; border-bottom: 1px solid var(--border); color: var(--text2); }
+  .data-table tr:hover td { background: var(--surface2); }
+  .data-table tr:last-child td { border-bottom: none; }
+
+  .rep-name { font-weight: 600; }
+  .attain-bar { height: 4px; background: var(--border); border-radius: 4px; margin-top: 4px; }
+  .attain-fill { height: 100%; border-radius: 4px; }
+
+  .status-badge {
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 500;
+  }
+  .status-on { background: rgba(0,184,150,0.1); color: #00966e; }
+  .status-risk { background: rgba(232,168,0,0.1); color: #b07d00; }
+  .status-behind { background: rgba(232,79,53,0.1); color: var(--accent4); }
+
+  .rank-num { font-size: 12px; color: var(--text3); font-family: 'DM Mono', monospace; width: 24px; }
+
+  /* BOTTOM ROW */
+  .bottom-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    animation: fadeUp 0.5s 0.25s ease both;
+  }
+
+  /* AI CHAT */
+  .chat-panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    height: 420px;
+  }
+
+  .chat-header {
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+    background: var(--surface2);
+    border-radius: 10px 10px 0 0;
+  }
+
+  .chat-ai-dot {
+    width: 8px; height: 8px;
+    background: linear-gradient(135deg, #3a7ef4, #8b5cf6);
+    border-radius: 50%;
+    box-shadow: 0 0 8px rgba(58,126,244,0.4);
+    animation: pulse 2s infinite;
+  }
+
+  .chat-title { font-size: 13px; font-weight: 600; }
+  .chat-hint { font-size: 11px; color: var(--text3); margin-left: auto; }
+
+  .chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+  }
+
+  .msg { display: flex; gap: 10px; animation: fadeUp 0.3s ease both; }
+
+  .msg-avatar {
+    width: 26px; height: 26px;
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .msg-ai .msg-avatar { background: linear-gradient(135deg, #3a7ef4, #8b5cf6); }
+  .msg-user .msg-avatar { background: var(--surface2); border: 1px solid var(--border2); font-size: 10px; }
+  .msg-user { flex-direction: row-reverse; }
+
+  .msg-bubble {
+    padding: 9px 13px;
+    border-radius: 10px;
+    font-size: 12.5px;
+    line-height: 1.6;
+    max-width: 82%;
+  }
+
+  .msg-ai .msg-bubble { background: var(--surface2); border: 1px solid var(--border); color: var(--text2); border-radius: 10px 10px 10px 2px; }
+  .msg-user .msg-bubble { background: rgba(58,126,244,0.1); border: 1px solid rgba(58,126,244,0.2); color: var(--text); border-radius: 10px 10px 2px 10px; }
+
+  .chat-input-row {
+    padding: 12px 16px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+
+  .chat-input {
+    flex: 1;
+    background: var(--surface2);
+    border: 1px solid var(--border2);
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: 12.5px;
+    font-family: inherit;
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .chat-input::placeholder { color: var(--text3); }
+  .chat-input:focus { border-color: var(--accent); }
+
+  .chat-send {
+    width: 34px; height: 34px;
+    background: var(--sigma);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    color: white;
+    transition: background 0.15s;
+    flex-shrink: 0;
+  }
+  .chat-send:hover { background: #2a6ee0; }
+
+  .chat-suggestions {
+    display: flex;
+    gap: 6px;
+    padding: 8px 16px 0;
+    flex-wrap: wrap;
+    flex-shrink: 0;
+  }
+
+  .chat-sug {
+    padding: 4px 10px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    font-size: 11px;
+    color: var(--text2);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .chat-sug:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* NOTES */
+  .notes-panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    height: 420px;
+  }
+
+  .notes-header {
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+    background: var(--surface2);
+    border-radius: 10px 10px 0 0;
+  }
+
+  .notes-icon {
+    width: 22px; height: 22px;
+    background: rgba(232,168,0,0.1);
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    color: #b07d00;
+    font-size: 11px;
+  }
+
+  .notes-title { font-size: 13px; font-weight: 600; }
+  .notes-count { font-size: 11px; color: var(--text3); margin-left: auto; }
+
+  .notes-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 12px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+  }
+
+  .note-item {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 11px 14px;
+    transition: border-color 0.15s;
+    animation: fadeUp 0.3s ease both;
+  }
+  .note-item:hover { border-color: var(--border2); }
+
+  .note-meta { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+  .note-author { font-size: 11px; font-weight: 600; color: var(--accent); }
+  .note-rep { font-size: 11px; color: var(--text3); }
+  .note-time { font-size: 10px; color: var(--text3); margin-left: auto; font-family: 'DM Mono', monospace; }
+  .note-text { font-size: 12.5px; color: var(--text2); line-height: 1.55; }
+  .note-tag {
+    display: inline-block;
+    margin-top: 7px;
+    padding: 2px 7px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 500;
+  }
+  .tag-follow { background: rgba(58,126,244,0.08); color: var(--accent); }
+  .tag-risk { background: rgba(232,79,53,0.1); color: var(--accent4); }
+  .tag-win { background: rgba(0,184,150,0.1); color: #00966e; }
+  .tag-blocker { background: rgba(232,168,0,0.1); color: #b07d00; }
+
+  .notes-form {
+    border-top: 1px solid var(--border);
+    padding: 12px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+
+  .notes-form-row { display: flex; gap: 8px; }
+
+  .form-select, .form-input {
+    background: var(--surface2);
+    border: 1px solid var(--border2);
+    border-radius: 7px;
+    padding: 7px 10px;
+    font-size: 12px;
+    font-family: inherit;
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .form-select:focus, .form-input:focus { border-color: var(--accent); }
+  .form-select { flex: 1; }
+  .form-input { flex: 1; }
+  .form-select option { background: var(--surface2); }
+
+  .notes-textarea {
+    background: var(--surface2);
+    border: 1px solid var(--border2);
+    border-radius: 7px;
+    padding: 8px 12px;
+    font-size: 12px;
+    font-family: inherit;
+    color: var(--text);
+    outline: none;
+    resize: none;
+    transition: border-color 0.15s;
+    height: 54px;
+  }
+  .notes-textarea::placeholder { color: var(--text3); }
+  .notes-textarea:focus { border-color: var(--accent); }
+
+  .notes-submit {
+    display: flex; align-items: center; gap: 6px;
+    padding: 7px 14px;
+    background: rgba(232,168,0,0.1);
+    border: 1px solid rgba(245,158,11,0.3);
+    border-radius: 7px;
+    color: #b07d00;
+    font-size: 12px;
+    font-weight: 500;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all 0.15s;
+    align-self: flex-end;
+  }
+  .notes-submit:hover { background: rgba(232,168,0,0.2); }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* SPARKLINES */
+  .sparkline { display: flex; align-items: flex-end; gap: 2px; height: 28px; margin-top: 8px; }
+  .spark-bar { flex: 1; border-radius: 2px 2px 0 0; min-height: 3px; opacity: 0.7; }
+
+  /* Sigma watermark */
+  .sigma-watermark {
+    text-align: center;
+    padding: 20px;
+    font-size: 11px;
+    color: var(--text3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+
+  /* Typing indicator */
+  .typing { display: flex; align-items: center; gap: 3px; padding: 4px 0; }
+  .typing-dot {
+    width: 5px; height: 5px;
+    background: var(--accent);
+    border-radius: 50%;
+    animation: typingBounce 1.2s infinite;
+  }
+  .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+  .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes typingBounce {
+    0%,60%,100% { transform: translateY(0); opacity: 0.4; }
+    30% { transform: translateY(-4px); opacity: 1; }
+  }
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="sigma-logo">
+    <!-- Sigma real logo: geometric paper-plane mark + wordmark -->
+    <svg width="90" height="28" viewBox="0 0 200 62" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Paper-plane / arrow mark -->
+      <!-- Main large right-pointing triangle (top half of kite) -->
+      <polygon points="0,10 38,31 0,31" fill="#0f1629"/>
+      <!-- Bottom half of kite -->
+      <polygon points="0,31 38,31 0,52" fill="#0f1629" opacity="0.55"/>
+      <!-- Small top-left inner triangle notch -->
+      <polygon points="0,10 18,10 0,22" fill="#ffffff"/>
+      <!-- Small bottom detached triangle -->
+      <polygon points="4,54 22,54 4,62" fill="#0f1629"/>
+      <!-- Wordmark "sigma" -->
+      <text x="50" y="44" font-family="'DM Sans', sans-serif" font-size="32" font-weight="500" fill="#0f1629" letter-spacing="-0.5">sigma</text>
+    </svg>
+  </div>
+  <div class="topbar-divider"></div>
+  <div class="breadcrumb">
+    <span>TechFlow Solutions</span>
+    <span class="sep">/</span>
+    <span>Sales</span>
+    <span class="sep">/</span>
+    <span>Q1 2026 Pipeline Dashboard</span>
+  </div>
+  <div class="topbar-actions">
+    <div class="live-badge">
+      <div class="live-dot"></div>
+      Live · Feb 25, 11:59 PM
+    </div>
+    <button class="btn btn-ghost">
+      <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+      Export
+    </button>
+    <button class="btn btn-ghost">
+      <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+      Share
+    </button>
+    <button class="btn btn-primary">Edit</button>
+  </div>
+</div>
+
+<!-- FILTER BAR -->
+<div class="filterbar">
+  <span class="filter-label">Filters</span>
+  <div class="filter-chip active">
+    <svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+    Q1 2026
+    <svg width="10" height="10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+  </div>
+  <div class="filter-chip">
+    <svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"/></svg>
+    All Regions
+    <svg width="10" height="10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+  </div>
+  <div class="filter-chip">
+    <svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+    All Segments
+    <svg width="10" height="10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+  </div>
+  <div class="filter-chip">
+    All Reps <svg width="10" height="10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+  </div>
+  <button class="btn btn-ghost" style="margin-left:auto; font-size:11px;">+ Add Filter</button>
+</div>
+
+<div class="main">
+
+  <!-- HEADER -->
+  <div class="dash-header">
+    <div>
+      <div class="dash-title">Sales Performance Overview</div>
+      <div class="dash-sub">Q1 2026 · All Regions · All Segments · 12 Active Reps</div>
+    </div>
+  </div>
+
+  <!-- AI SUMMARY -->
+  <div class="ai-summary">
+    <div class="ai-summary-header">
+      <div class="ai-icon">✦</div>
+      <div>
+        <div class="ai-label">AI Summary · Powered by Sigma AI</div>
+      </div>
+      <div class="ai-timestamp">Generated 2 min ago</div>
+    </div>
+    <div class="ai-text">
+      Q1 pipeline is <strong class="highlight-green">$14.2M, up 8% vs Q4</strong>, but Closed Won QTD of <strong>$3.8M is 4% below target</strong>, suggesting late-stage deal velocity is the core gap. <strong class="highlight-yellow">Priya Nair and Serena Malik</strong> together hold <strong>$2.5M in open pipeline</strong> with 20 deals at Stage 4+, yet their combined attainment sits at only <strong>56%</strong> — the forecast depends heavily on these two closing by month-end. The <strong class="highlight-red">9-day sales cycle stretch</strong> is concentrated in Enterprise deals, not SMB, pointing to a procurement or approval bottleneck rather than a prospecting issue. <strong class="highlight-green">Jamie Ortiz (97%)</strong> is the only rep already within striking distance of quota.
+    </div>
+    <div class="ai-pills">
+      <span class="ai-pill pill-red">⚠ 2 reps behind pace</span>
+      <span class="ai-pill pill-yellow">↑ $2.5M Enterprise pipeline at risk</span>
+      <span class="ai-pill pill-green">✓ Jamie at 97% attainment</span>
+      <span class="ai-pill pill-blue">↗ Avg deal size up 12% YoY</span>
+    </div>
+  </div>
+
+  <!-- KPIs -->
+  <div class="kpi-row">
+    <div class="kpi-card">
+      <div class="kpi-label">Total Pipeline</div>
+      <div class="kpi-value">$14.2M</div>
+      <div class="kpi-change up">▲ 8% vs Q4 2025</div>
+      <div class="sparkline">
+        <div class="spark-bar" style="height:40%;background:#3a7ef4;"></div>
+        <div class="spark-bar" style="height:55%;background:#3a7ef4;"></div>
+        <div class="spark-bar" style="height:48%;background:#3a7ef4;"></div>
+        <div class="spark-bar" style="height:62%;background:#3a7ef4;"></div>
+        <div class="spark-bar" style="height:70%;background:#3a7ef4;"></div>
+        <div class="spark-bar" style="height:78%;background:#3a7ef4;"></div>
+        <div class="spark-bar" style="height:100%;background:#3a7ef4;opacity:1;"></div>
+      </div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Closed Won (QTD)</div>
+      <div class="kpi-value">$3.8M</div>
+      <div class="kpi-change down">▼ 4% vs target</div>
+      <div class="kpi-bar"><div class="kpi-bar-fill" style="width:76%;background:#e84f35;"></div></div>
+      <div style="font-size:10px;color:var(--text3);margin-top:4px;">76% of $5M target</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Win Rate</div>
+      <div class="kpi-value">31%</div>
+      <div class="kpi-change flat">— flat vs last quarter</div>
+      <div class="kpi-bar"><div class="kpi-bar-fill" style="width:31%;background:#4a5578;"></div></div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Avg Deal Size</div>
+      <div class="kpi-value">$48K</div>
+      <div class="kpi-change up">▲ 12% vs last year</div>
+      <div class="sparkline">
+        <div class="spark-bar" style="height:60%;background:#00b896;"></div>
+        <div class="spark-bar" style="height:65%;background:#00b896;"></div>
+        <div class="spark-bar" style="height:70%;background:#00b896;"></div>
+        <div class="spark-bar" style="height:72%;background:#00b896;"></div>
+        <div class="spark-bar" style="height:80%;background:#00b896;"></div>
+        <div class="spark-bar" style="height:90%;background:#00b896;"></div>
+        <div class="spark-bar" style="height:100%;background:#00b896;opacity:1;"></div>
+      </div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Avg Sales Cycle</div>
+      <div class="kpi-value">67d</div>
+      <div class="kpi-change down">▲ 9 days vs target</div>
+      <div class="kpi-bar"><div class="kpi-bar-fill" style="width:115%;background:#e8a800;"></div></div>
+      <div style="font-size:10px;color:var(--text3);margin-top:4px;">Target: 58 days</div>
+    </div>
+  </div>
+
+  <!-- CHARTS ROW -->
+  <div class="charts-row">
+    <!-- Pipeline by Stage -->
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">Pipeline by Stage</div>
+          <div class="card-sub">All segments · Q1 2026</div>
+        </div>
+        <div class="tab-pills">
+          <span class="tab-pill active">Bar</span>
+          <span class="tab-pill">Table</span>
+        </div>
+      </div>
+      <div class="card-body">
+        <svg class="chart-svg" height="180" viewBox="0 0 540 180">
+          <defs>
+            <linearGradient id="g1" x1="0" x2="0" y1="0" y2="1">
+              <stop offset="0%" stop-color="#3a7ef4" stop-opacity="1"/>
+              <stop offset="100%" stop-color="#3a7ef4" stop-opacity="0.6"/>
+            </linearGradient>
+            <linearGradient id="g2" x1="0" x2="0" y1="0" y2="1">
+              <stop offset="0%" stop-color="#a78bfa" stop-opacity="1"/>
+              <stop offset="100%" stop-color="#a78bfa" stop-opacity="0.6"/>
+            </linearGradient>
+          </defs>
+          <!-- Grid lines -->
+          <line x1="60" y1="20" x2="540" y2="20" stroke="#e2e6f0" stroke-width="1"/>
+          <line x1="60" y1="55" x2="540" y2="55" stroke="#e2e6f0" stroke-width="1"/>
+          <line x1="60" y1="90" x2="540" y2="90" stroke="#e2e6f0" stroke-width="1"/>
+          <line x1="60" y1="125" x2="540" y2="125" stroke="#e2e6f0" stroke-width="1"/>
+          <line x1="60" y1="155" x2="540" y2="155" stroke="#e2e6f0" stroke-width="1"/>
+          <!-- Y labels -->
+          <text x="52" y="24" text-anchor="end" fill="#9aa3bf" font-size="10" font-family="DM Mono">$4M</text>
+          <text x="52" y="59" text-anchor="end" fill="#9aa3bf" font-size="10" font-family="DM Mono">$3M</text>
+          <text x="52" y="94" text-anchor="end" fill="#9aa3bf" font-size="10" font-family="DM Mono">$2M</text>
+          <text x="52" y="129" text-anchor="end" fill="#9aa3bf" font-size="10" font-family="DM Mono">$1M</text>
+          <text x="52" y="159" text-anchor="end" fill="#9aa3bf" font-size="10" font-family="DM Mono">$0</text>
+
+          <!-- Bars: stage 1-5 + closed won -->
+          <!-- Stage 1: $1.8M → h≈45 -->
+          <rect x="80" y="112" width="34" height="43" rx="3" fill="url(#g1)" opacity="0.5"/>
+          <rect x="116" y="122" width="34" height="33" rx="3" fill="url(#g2)" opacity="0.5"/>
+          <text x="105" y="173" text-anchor="middle" fill="#9aa3bf" font-size="10">Stage 1</text>
+
+          <!-- Stage 2: $2.4M -->
+          <rect x="165" y="93" width="34" height="62" rx="3" fill="url(#g1)" opacity="0.6"/>
+          <rect x="201" y="105" width="34" height="50" rx="3" fill="url(#g2)" opacity="0.6"/>
+          <text x="190" y="173" text-anchor="middle" fill="#9aa3bf" font-size="10">Stage 2</text>
+
+          <!-- Stage 3: $3.2M -->
+          <rect x="250" y="70" width="34" height="85" rx="3" fill="url(#g1)" opacity="0.75"/>
+          <rect x="286" y="88" width="34" height="67" rx="3" fill="url(#g2)" opacity="0.75"/>
+          <text x="275" y="173" text-anchor="middle" fill="#9aa3bf" font-size="10">Stage 3</text>
+
+          <!-- Stage 4: $3.8M -->
+          <rect x="335" y="53" width="34" height="102" rx="3" fill="url(#g1)" opacity="0.9"/>
+          <rect x="371" y="72" width="34" height="83" rx="3" fill="url(#g2)" opacity="0.9"/>
+          <text x="360" y="173" text-anchor="middle" fill="#9aa3bf" font-size="10">Stage 4</text>
+
+          <!-- Closed: $3.0M -->
+          <rect x="420" y="78" width="34" height="77" rx="3" fill="#00b896" opacity="0.7"/>
+          <rect x="456" y="98" width="34" height="57" rx="3" fill="#00b896" opacity="0.45"/>
+          <text x="445" y="173" text-anchor="middle" fill="#9aa3bf" font-size="10">Closed</text>
+
+          <!-- Legend -->
+          <rect x="65" y="8" width="8" height="8" rx="2" fill="#3a7ef4"/>
+          <text x="77" y="16" fill="#4a5578" font-size="10">Enterprise</text>
+          <rect x="140" y="8" width="8" height="8" rx="2" fill="#a78bfa"/>
+          <text x="152" y="16" fill="#4a5578" font-size="10">Mid-Market</text>
+          <rect x="225" y="8" width="8" height="8" rx="2" fill="#00b896"/>
+          <text x="237" y="16" fill="#4a5578" font-size="10">SMB</text>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Win/Loss by Region -->
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">Win / Loss by Region</div>
+          <div class="card-sub">Q1 2026 · Closed deals</div>
+        </div>
+        <div class="tab-pills">
+          <span class="tab-pill active">Donut</span>
+          <span class="tab-pill">Table</span>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="donut-wrap">
+          <svg width="140" height="140" viewBox="0 0 140 140">
+            <circle cx="70" cy="70" r="50" fill="none" stroke="#e2e6f0" stroke-width="22"/>
+            <!-- West Won: 38% -->
+            <circle cx="70" cy="70" r="50" fill="none" stroke="#3a7ef4" stroke-width="22" stroke-dasharray="119.4 195" stroke-dashoffset="0" transform="rotate(-90 70 70)"/>
+            <!-- East Won: 28% -->
+            <circle cx="70" cy="70" r="50" fill="none" stroke="#00b896" stroke-width="22" stroke-dasharray="87.9 227" stroke-dashoffset="-119.4" transform="rotate(-90 70 70)"/>
+            <!-- Central Won: 22% -->
+            <circle cx="70" cy="70" r="50" fill="none" stroke="#e8a800" stroke-width="22" stroke-dasharray="69.1 245" stroke-dashoffset="-207.3" transform="rotate(-90 70 70)"/>
+            <!-- Lost: 12% -->
+            <circle cx="70" cy="70" r="50" fill="none" stroke="#e84f35" stroke-width="22" stroke-dasharray="37.7 277" stroke-dashoffset="-276.4" transform="rotate(-90 70 70)"/>
+            <text x="70" y="67" text-anchor="middle" fill="#e8ecf4" font-size="18" font-weight="600" font-family="DM Sans">31%</text>
+            <text x="70" y="82" text-anchor="middle" fill="#9aa3bf" font-size="10" font-family="DM Sans">Win Rate</text>
+          </svg>
+          <div class="donut-legend">
+            <div class="legend-item">
+              <div class="legend-dot" style="background:#3a7ef4;"></div>
+              <span class="legend-name">West Won</span>
+              <span class="legend-val" style="color:#3a7ef4;">38%</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-dot" style="background:#00b896;"></div>
+              <span class="legend-name">East Won</span>
+              <span class="legend-val" style="color:#00966e;">28%</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-dot" style="background:#e8a800;"></div>
+              <span class="legend-name">Central Won</span>
+              <span class="legend-val" style="color:#e8a800;">22%</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-dot" style="background:#e84f35;"></div>
+              <span class="legend-name">Lost</span>
+              <span class="legend-val" style="color:#e84f35;">12%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- REP LEADERBOARD -->
+  <div class="card table-wrap">
+    <div class="card-header">
+      <div>
+        <div class="card-title">Rep Leaderboard</div>
+        <div class="card-sub">Revenue to Date · Q1 2026 · 12 reps</div>
+      </div>
+      <div class="card-actions">
+        <button class="btn btn-ghost" style="font-size:11px;">
+          <svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/></svg>
+          Columns
+        </button>
+        <button class="btn btn-ghost" style="font-size:11px;">Export CSV</button>
+      </div>
+    </div>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th class="sort">Rep ↕</th>
+          <th>Region</th>
+          <th>Segment</th>
+          <th class="sort">Quota ↕</th>
+          <th class="sort">Closed Won ↓</th>
+          <th>Attainment</th>
+          <th>Open Pipeline</th>
+          <th>Stage 4+</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="rank-num">01</span></td>
+          <td><span class="rep-name">Jamie Ortiz</span></td>
+          <td><span style="font-size:11px;color:var(--text2);">West</span></td>
+          <td><span style="font-size:11px;color:var(--text2);">Enterprise</span></td>
+          <td><span style="font-family:'DM Mono',monospace;font-size:12px;">$400K</span></td>
+          <td><strong style="font-family:'DM Mono',monospace;">$387K</strong></td>
+          <td>
+            <span style="font-size:12px;font-weight:600;color:#00966e;">97%</span>
+            <div class="attain-bar"><div class="attain-fill" style="width:97%;background:#00b896;"></div></div>
+          </td>
+          <td><span style="font-family:'DM Mono',monospace;font-size:12px;">$820K</span></td>
+          <td><span style="font-family:'DM Mono',monospace;font-size:12px;">7</span></td>
+          <td><span class="status-badge status-on">On Track</span></td>
+        </tr>
+        <tr>
+          <td><span class="rank-num">02</span></td>
+          <td><span class="rep-name">Marcus Webb</span></td>
+          <td><span style="font-size:11px;color:var(--text2);">East</span></td>
+          <td><span style="font-size:11px;color:var(--text2);">Mid-Market</span></td>
+          <td><span style="font-family:'DM Mono',monospace;font-size:12px;">$350K</span></td>
+          <td><strong style="font-family:'DM Mono',monospace;">$312K</strong></td>
+          <td>
+            <span style="font-size:12px;font-weight:600;color:#00966e;">89%</span>
+            <div class="attain-bar"><div class="attain-fill" style="width:89%;background:#00b896;"></div></div>
+          </td>
+          <td><span style="font-family:'DM Mono',monospace;font-size:12px;">$540K</span></td>
+          <td><span style="font-family:'DM Mono',monospace;font-size:12px;">5</span></td>
+          <td><span class="status-badge status-on">On Track</span></td>
+        </tr>
+        <tr>
+          <td><span class="rank-num">03</span></td>
+          <td><span class="rep-name">Priya Nair</span></td>
+          <td><span style="font-size:11px;color:var(--text2);">Central</span></td>
+          <td><span style="font-size:11px;color:var(--text2);">Enterprise</span></td>
+          <td><span style="font-family:'DM Mono',monospace;font-size:12px;">$420K</span></td>
+          <td><strong style="font-family:'DM Mono',monospace;">$298K</strong></td>
+          <td>
+            <span style="font-size:12px;font-weight:600;color:#e8a800;">71%</span>
+            <div class="attain-bar"><div class="attain-fill" style="width:71%;background:#e8a800;"></div></div>
+          </td>
+          <td><span style="font-family:'DM Mono',monospace;font-size:12px;">$1.1M</span></td>
+          <td><span style="font-family:'DM Mono',monospace;font-size:12px;">9</span></td>
+          <td><span class="status-badge status-risk">At Risk</span></td>
+        </tr>
+        <tr>
+          <td><span class="rank-num">04</span></td>
+          <td><span class="rep-name">Devon Park</span></td>
+          <td><span style="font-size:11px;color:var(--text2);">West</span></td>
+          <td><span style="font-size:11px;color:var(--text2);">SMB</span></td>
+          <td><span style="font-family:'DM Mono',monospace;font-size:12px;">$280K</span></td>
+          <td><strong style="font-family:'DM Mono',monospace;">$241K</strong></td>
+          <td>
+            <span style="font-size:12px;font-weight:600;color:#00966e;">86%</span>
+            <div class="attain-bar"><div class="attain-fill" style="width:86%;background:#00b896;"></div></div>
+          </td>
+          <td><span style="font-family:'DM Mono',monospace;font-size:12px;">$290K</span></td>
+          <td><span style="font-family:'DM Mono',monospace;font-size:12px;">4</span></td>
+          <td><span class="status-badge status-on">On Track</span></td>
+        </tr>
+        <tr>
+          <td><span class="rank-num">05</span></td>
+          <td><span class="rep-name">Serena Malik</span></td>
+          <td><span style="font-size:11px;color:var(--text2);">East</span></td>
+          <td><span style="font-size:11px;color:var(--text2);">Enterprise</span></td>
+          <td><span style="font-family:'DM Mono',monospace;font-size:12px;">$450K</span></td>
+          <td><strong style="font-family:'DM Mono',monospace;">$184K</strong></td>
+          <td>
+            <span style="font-size:12px;font-weight:600;color:#e84f35;">41%</span>
+            <div class="attain-bar"><div class="attain-fill" style="width:41%;background:#e84f35;"></div></div>
+          </td>
+          <td><span style="font-family:'DM Mono',monospace;font-size:12px;">$1.4M</span></td>
+          <td><span style="font-family:'DM Mono',monospace;font-size:12px;">11</span></td>
+          <td><span class="status-badge status-behind">Behind</span></td>
+        </tr>
+        <tr>
+          <td><span class="rank-num">06</span></td>
+          <td><span class="rep-name">Tom Vickers</span></td>
+          <td><span style="font-size:11px;color:var(--text2);">Central</span></td>
+          <td><span style="font-size:11px;color:var(--text2);">Mid-Market</span></td>
+          <td><span style="font-family:'DM Mono',monospace;font-size:12px;">$300K</span></td>
+          <td><strong style="font-family:'DM Mono',monospace;">$156K</strong></td>
+          <td>
+            <span style="font-size:12px;font-weight:600;color:#e8a800;">52%</span>
+            <div class="attain-bar"><div class="attain-fill" style="width:52%;background:#e8a800;"></div></div>
+          </td>
+          <td><span style="font-family:'DM Mono',monospace;font-size:12px;">$620K</span></td>
+          <td><span style="font-family:'DM Mono',monospace;font-size:12px;">6</span></td>
+          <td><span class="status-badge status-risk">At Risk</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- BOTTOM ROW: AI Chat + Notes -->
+  <div class="bottom-row">
+
+    <!-- AI CHAT -->
+    <div class="chat-panel">
+      <div class="chat-header">
+        <div class="chat-ai-dot"></div>
+        <span class="chat-title">Ask your data</span>
+        <span class="chat-hint">✦ Sigma AI</span>
+      </div>
+      <div class="chat-suggestions">
+        <span class="chat-sug">Why is Serena behind?</span>
+        <span class="chat-sug">Which deals will close?</span>
+        <span class="chat-sug">Cycle time by rep</span>
+        <span class="chat-sug">Compare to Q4</span>
+      </div>
+      <div class="chat-messages" id="chatMessages">
+        <div class="msg msg-ai">
+          <div class="msg-avatar">✦</div>
+          <div class="msg-bubble">
+            Hi! I'm connected to your TechFlow pipeline data. Ask me anything — I can analyze rep performance, forecast deals, explain trends, and more.
+          </div>
+        </div>
+        <div class="msg msg-user">
+          <div class="msg-avatar">JK</div>
+          <div class="msg-bubble">Why has the sales cycle stretched by 9 days?</div>
+        </div>
+        <div class="msg msg-ai">
+          <div class="msg-avatar">✦</div>
+          <div class="msg-bubble">
+            The 9-day increase is driven entirely by <strong>Enterprise deals</strong>. Looking at time-in-stage data, the gap appears at <strong>Stage 3 → 4</strong>, which maps to the "Legal / Procurement Review" phase. SMB and Mid-Market cycle times are actually down 2 days vs Q4. I'd recommend a focused audit of Priya and Serena's Stage 3 deals — 7 of them have been stalled 30+ days.
+          </div>
+        </div>
+      </div>
+      <div class="chat-input-row">
+        <input class="chat-input" type="text" placeholder="Ask about your pipeline data..." id="chatInput"/>
+        <button class="chat-send" onclick="sendMessage()">
+          <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- NOTES / INPUT TABLE -->
+    <div class="notes-panel">
+      <div class="notes-header">
+        <div class="notes-icon">✎</div>
+        <span class="notes-title">Deal Notes & Manager Actions</span>
+        <span class="notes-count" id="notesCount">3 notes</span>
+      </div>
+      <div class="notes-list" id="notesList">
+        <div class="note-item">
+          <div class="note-meta">
+            <span class="note-author">R. Chen</span>
+            <span class="note-rep">→ Serena Malik</span>
+            <span class="note-time">Feb 24</span>
+          </div>
+          <div class="note-text">Acme Corp deal ($340K) stuck in legal review since Feb 10. Looped in our legal team — expect resolution by Mar 1. Serena to re-engage economic buyer this week.</div>
+          <span class="note-tag tag-risk">⚠ At Risk</span>
+        </div>
+        <div class="note-item">
+          <div class="note-meta">
+            <span class="note-author">M. Torres</span>
+            <span class="note-rep">→ Priya Nair</span>
+            <span class="note-time">Feb 22</span>
+          </div>
+          <div class="note-text">9 deals in Stage 4+ — agreed to prioritize top 3 by deal value. Priya confident on $280K GlobalOps deal closing by EOM. Will track weekly.</div>
+          <span class="note-tag tag-follow">↺ Follow-up</span>
+        </div>
+        <div class="note-item">
+          <div class="note-meta">
+            <span class="note-author">K. Patel</span>
+            <span class="note-rep">→ Jamie Ortiz</span>
+            <span class="note-time">Feb 21</span>
+          </div>
+          <div class="note-text">Jamie ahead of pace — pipeline looks strong for Q1 close. Discussing stretch goal of $420K. Flagging as a top performer for Q2 expansion planning.</div>
+          <span class="note-tag tag-win">✓ On Track</span>
+        </div>
+      </div>
+      <div class="notes-form">
+        <div class="notes-form-row">
+          <select class="form-select">
+            <option>Select Rep...</option>
+            <option>Jamie Ortiz</option>
+            <option>Marcus Webb</option>
+            <option>Priya Nair</option>
+            <option>Devon Park</option>
+            <option>Serena Malik</option>
+            <option>Tom Vickers</option>
+          </select>
+          <select class="form-select" style="max-width:120px;">
+            <option>Follow-up</option>
+            <option>At Risk</option>
+            <option>Blocker</option>
+            <option>On Track</option>
+          </select>
+        </div>
+        <textarea class="notes-textarea" placeholder="Add a note about this rep or deal..." id="noteInput"></textarea>
+        <button class="notes-submit" onclick="addNote()">
+          <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Log Note
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="sigma-watermark">
+    <svg width="44" height="14" viewBox="0 0 200 62" fill="none" xmlns="http://www.w3.org/2000/svg" opacity="0.5">
+      <polygon points="0,10 38,31 0,31" fill="#4a5578"/>
+      <polygon points="0,31 38,31 0,52" fill="#4a5578" opacity="0.55"/>
+      <polygon points="0,10 18,10 0,22" fill="#ffffff"/>
+      <polygon points="4,54 22,54 4,62" fill="#4a5578"/>
+      <text x="50" y="44" font-family="'DM Sans', sans-serif" font-size="32" font-weight="500" fill="#9aa3bf" letter-spacing="-0.5">sigma</text>
+    </svg>
+    TechFlow Solutions · Sigma Computing · Q1 2026 Pipeline Dashboard · Data as of Feb 25, 11:59 PM
+  </div>
+
+</div>
+
+<script>
+  // Chat interaction
+  const responses = {
+    default: [
+      "Based on your pipeline data, I can see that Enterprise deals account for 68% of total pipeline value but only 52% of closed won revenue this quarter.",
+      "Looking at the stage distribution, you have $3.8M concentrated in Stage 4 — the highest conversion rate is typically achieved when reps make contact within 48 hours of stalling.",
+      "Compared to Q4 2025, the West region has improved win rate by 6 points while Central has declined by 4 points. The difference tracks with deal size — larger Enterprise deals in Central have longer approval chains.",
+      "Your data suggests that deals with 3+ stakeholder touches in Stage 3 close at 2.4× the rate of single-touch deals. Serena's pipeline has mostly single-touch activity logged."
+    ]
+  };
+
+  let responseIdx = 0;
+
+  function sendMessage() {
+    const input = document.getElementById('chatInput');
+    const messages = document.getElementById('chatMessages');
+    const val = input.value.trim();
+    if (!val) return;
+
+    // Add user message
+    const userMsg = document.createElement('div');
+    userMsg.className = 'msg msg-user';
+    userMsg.innerHTML = `<div class="msg-avatar">JK</div><div class="msg-bubble">${val}</div>`;
+    messages.appendChild(userMsg);
+    input.value = '';
+
+    // Typing indicator
+    const typing = document.createElement('div');
+    typing.className = 'msg msg-ai';
+    typing.innerHTML = `<div class="msg-avatar">✦</div><div class="msg-bubble"><div class="typing"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div></div>`;
+    messages.appendChild(typing);
+    messages.scrollTop = messages.scrollHeight;
+
+    setTimeout(() => {
+      typing.remove();
+      const aiMsg = document.createElement('div');
+      aiMsg.className = 'msg msg-ai';
+      const r = responses.default[responseIdx % responses.default.length];
+      responseIdx++;
+      aiMsg.innerHTML = `<div class="msg-avatar">✦</div><div class="msg-bubble">${r}</div>`;
+      messages.appendChild(aiMsg);
+      messages.scrollTop = messages.scrollHeight;
+    }, 1400);
+
+    messages.scrollTop = messages.scrollHeight;
+  }
+
+  document.getElementById('chatInput').addEventListener('keydown', e => {
+    if (e.key === 'Enter') sendMessage();
+  });
+
+  // Suggestion clicks
+  document.querySelectorAll('.chat-sug').forEach(el => {
+    el.addEventListener('click', () => {
+      document.getElementById('chatInput').value = el.textContent;
+      sendMessage();
+    });
+  });
+
+  // Notes
+  let noteCount = 3;
+  const tagMap = { 'Follow-up': 'tag-follow ↺ Follow-up', 'At Risk': 'tag-risk ⚠ At Risk', 'Blocker': 'tag-blocker ⚑ Blocker', 'On Track': 'tag-win ✓ On Track' };
+
+  function addNote() {
+    const textarea = document.getElementById('noteInput');
+    const selects = document.querySelectorAll('.form-select');
+    const rep = selects[0].value;
+    const tag = selects[1].value;
+    const text = textarea.value.trim();
+    if (!text || rep === 'Select Rep...') return;
+
+    noteCount++;
+    document.getElementById('notesCount').textContent = `${noteCount} notes`;
+
+    const tagInfo = tagMap[tag] || 'tag-follow ↺ Follow-up';
+    const [tagClass, tagLabel] = tagInfo.split(' ').length > 2
+      ? [tagInfo.split(' ')[0], tagInfo.split(' ').slice(1).join(' ')]
+      : [tagInfo, tag];
+
+    const item = document.createElement('div');
+    item.className = 'note-item';
+    item.style.animationDelay = '0s';
+    item.innerHTML = `
+      <div class="note-meta">
+        <span class="note-author">You</span>
+        <span class="note-rep">→ ${rep}</span>
+        <span class="note-time">Just now</span>
+      </div>
+      <div class="note-text">${text}</div>
+      <span class="note-tag ${tagClass}">${tagLabel}</span>
+    `;
+
+    const list = document.getElementById('notesList');
+    list.prepend(item);
+    list.scrollTop = 0;
+    textarea.value = '';
+    selects[0].value = 'Select Rep...';
+  }
+</script>
+</body>
+</html>
